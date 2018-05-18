@@ -1,0 +1,2 @@
+mongoexport --db SatelliteDB --collection Photo --out Photo.json
+mongoimport --db SatelliteDB --collection Photo --file Photo.json
