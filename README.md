@@ -11,4 +11,5 @@ ______________________________________________
 ______________________________________________
 
 ## Run Web app on heroku
-- •	นำไฟล์ .json ไป import เข้า mongodb บน mlab สามารถทำได้ตามลิ้งนี้ [Quick-Start Guide to mLab](https://docs.mlab.com/)(https://devcenter.heroku.com/articles/getting-started-with-php#introduction)
+- •	นำไฟล์ .json ไป import เข้า mongodb บน mlab สามารถทำได้ตามลิ้งนี้ [Quick-Start Guide to mLab](https://docs.mlab.com/)
+- รันบน Heroku สามารถทำได้ตามลิ้งนี้ [Getting Started on Heroku with PHP](https://devcenter.heroku.com/articles/getting-started-with-php#introduction)
