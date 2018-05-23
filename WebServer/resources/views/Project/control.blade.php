@@ -342,7 +342,7 @@ $('#Endcalendar').calendar({
 			EndDateTime.setSeconds(EndDateTime.getSeconds()-1);
 
 
-			DateSecond=(EndDateTime.getTime() - StartDateTemp)/1000; //เวลาที่จะพล็อตกี่วิ
+			DateSecond=(EndDateTime.getTime() - StartDateTemp); //เวลาที่จะพล็อตกี่วิ
 			var satrec = satellite.twoline2satrec(tleLine1, tleLine2);
 
 			calculate();
@@ -350,12 +350,14 @@ $('#Endcalendar').calendar({
 			{
 				
 				
-				for(var i = 1 ; i < DateSecond; i+=1)
+				for(var i = 1 ; i < DateSecond; i+=250)
 				{
 
 					var date = new Date();
-					date.setTime(StartDateTemp);
-					date.setSeconds( date.getSeconds() +i );
+					date.setTime(StartDateTemp+i);
+					
+					//date.setSeconds( date.setTime(i) );
+					//console.log(date);
 					var positionAndVelocity = satellite.propagate(satrec, date);
 
 
@@ -400,11 +402,15 @@ $('#Endcalendar').calendar({
 					longitudeStrArr[i] =  longitudeStr;
 					latitudeStrArr[i] =  latitudeStr;
 					timeArr[i] = date;
-					azimuthArr[i] = Math.ceil(azimuth*(180/Math.PI));
-					elevationArr[i] = Math.ceil(elevation*(180/Math.PI));
+				
+					azimuthArr[i] = (azimuth*(180/Math.PI)).toFixed(4);
+					elevationArr[i] = (elevation*(180/Math.PI)).toFixed(4);
+					// console.log(azimuthArr[i]);
+					// console.log(typeof((azimuth*(180/Math.PI)).toFixed(4)));
+					// console.log(typeof((azimuth*(180/Math.PI))));
 
 				}
-				var arrFree  = new Array(3);
+				var arrFree  = new Array(4);
 				var countINrec=0;
 				var jumlatStart = -999;
 				var jumlongStart = -999;
@@ -422,15 +428,15 @@ $('#Endcalendar').calendar({
 				ArrData  = new Array();
 				ArrDataControl  = new Array();
 				arrControl = new Array();
-				for(var i = 1 ; i <  DateSecond; i+=1)
+				for(var i = 1 ; i <  DateSecond; i+=250)
 				{
-					arrFree  = new Array(3);
+					arrFree  = new Array(4);
 					if(($('#SelectTime').text()) == "กลางวัน")
 					{
-
+						//console.log(timeArr[i]);
 						if( (timeArr[i].getHours()) >= 6  && (timeArr[i].getHours())<18 )
 						{
-
+							//console.log(timeArr[i]);
 							if( (circle.getLatLng().distanceTo([latitudeStrArr[i],longitudeStrArr[i]])) <= circle.getRadius() )
 							{
 								if(jumlatStart==-999 && jumlongStart==-999)
@@ -440,7 +446,8 @@ $('#Endcalendar').calendar({
 									azimuthStart=azimuthArr[i];
 									timeStart=timeArr[i];
 									timestamp=timeArr[i].getTime();
-									
+									// console.log(timestamp);
+									// console.log(timeStart);
 
 								}
 								if(Maxelevation<elevationArr[i])
@@ -457,6 +464,7 @@ $('#Endcalendar').calendar({
 								arrFree[0] = date;
 								arrFree[1] = azimuthArr[i];
 								arrFree[2] = elevationArr[i];
+								arrFree[3]= timeArr[i].getTime();
 								arrControl.push(arrFree);
 
 							}
@@ -509,7 +517,8 @@ $('#Endcalendar').calendar({
 								var date = temp.format("M/D/YYYY, h:mm:ss A");
 								arrFree[0] = date;
 								arrFree[1] = azimuthArr[i];
-								arrFree[2] = elevationArr[i]
+								arrFree[2] = elevationArr[i];
+								arrFree[3]= timeArr[i].getTime();
 								arrControl.push(arrFree);
 							}
 							else if(jumlatStart != -999)
@@ -559,7 +568,8 @@ $('#Endcalendar').calendar({
 							//console.log(date);
 							arrFree[0] = date;;
 							arrFree[1] = azimuthArr[i];
-							arrFree[2] = elevationArr[i]
+							arrFree[2] = elevationArr[i];
+							arrFree[3]= timeArr[i].getTime();
 							arrControl.push(arrFree);
 						}
 						else if(jumlatStart != -999)
@@ -598,21 +608,25 @@ $('#Endcalendar').calendar({
 		//console.log(ArrDataControl);
 		$("#tableshow tr").remove();	
 		var tostring = ArrDataControl.toString();
-		// console.log(ArrDataControl);
+		console.log(ArrDataControl);
 		for (var i = 0; i < ArrData.length ; i++) 
-		{
+		{	
 			var text ='';
+			var textTimestamp="";
 			for(var j = 0 ; j < ArrDataControl[i].length ; j++)
 			{
 				if( j == ArrDataControl[i].length -1)
 				{
 					text =text+ String(ArrDataControl[i][j][0])+','+String(ArrDataControl[i][j][1])+','+String(ArrDataControl[i][j][2]);
+					textTimestamp=textTimestamp+String();
 				}
 				else if( j != ArrDataControl[i].length)
 				{
 					text =text+ String(ArrDataControl[i][j][0])+','+String(ArrDataControl[i][j][1])+','+String(ArrDataControl[i][j][2])+',';
 				}
 			}
+			// console.log(ArrData[i][6]);
+			// console.log(text);
 			
 			var temp =  moment(ArrData[i][0]); 
 			var date = temp.format("D/M/YYYY");
